@@ -1,5 +1,6 @@
 ﻿using AlarmApp.Data;
 using Microsoft.AspNetCore.Mvc;
+using Telegram.Bot;
 
 namespace AlarmApp.Controllers
 {
@@ -15,11 +16,14 @@ namespace AlarmApp.Controllers
         }
 
         [HttpGet]
-        public void Get(int zoneId, bool isAlarm)
+        public async Task Get(int zoneId, bool isAlarm)
         {
             if (isAlarm)
             {
                 dataDbContext.Alarms.Add(new Alarm { Id = zoneId });
+
+                var tlClient = new TelegramBotClient("token");
+                await tlClient.SendTextMessageAsync(12345, $"Alarm in {zoneId}");
 
             }
         }
