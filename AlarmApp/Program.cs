@@ -1,5 +1,7 @@
+using AlarmApp.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace AlarmApp
 {
@@ -12,6 +14,7 @@ namespace AlarmApp
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
+            builder.Services.AddTransient<DataDbContext>();
 
             var app = builder.Build();
 
@@ -35,6 +38,9 @@ namespace AlarmApp
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
+
+            var dbContext = app.Services.GetRequiredService<DataDbContext>();
+            DbInitializer.Initialize(dbContext);
 
             app.Run();
         }

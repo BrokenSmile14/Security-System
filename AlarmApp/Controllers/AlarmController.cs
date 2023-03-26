@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AlarmApp.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AlarmApp.Controllers
@@ -7,11 +7,27 @@ namespace AlarmApp.Controllers
     [ApiController]
     public class AlarmController : ControllerBase
     {
-        // GET: api/<ValuesController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly DataDbContext dataDbContext;
+
+        public AlarmController(DataDbContext dataDbContext)
         {
-            return new string[] { "value1", "value2" };
+            this.dataDbContext = dataDbContext;
+        }
+
+        [HttpGet]
+        public void Get(int zoneId, bool isAlarm)
+        {
+            if (isAlarm)
+            {
+                dataDbContext.Alarms.Add(new Alarm { Id = zoneId });
+
+            }
+        }
+
+        [HttpGet]
+        public IEnumerable<Alarm> GetAll()
+        {
+            return dataDbContext.Alarms.ToList();
         }
     }
 }
